@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+
+  medusa:
+    build: .
+    ports:
+      - "9000:9000"
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/medusa
+      - REDIS_URL=redis://redis:6379
+      - COOKIE_SECRET=your_cookie_secret
+      - JWT_SECRET=your_jwt_secret
